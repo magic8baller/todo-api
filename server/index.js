@@ -1,7 +1,9 @@
-require('dotenv/config')
-const express = require('express');
-const logger = require('morgan');
-const bodyParser = require('body-parser');
+import dotenv from 'dotenv'
+dotenv.config()
+import express from 'express'
+
+import logger from 'morgan'
+import bodyParser from 'body-parser'
 const app = express();
 const {PORT} = process.env
 app.use(logger('dev'));

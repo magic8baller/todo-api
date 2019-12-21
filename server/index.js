@@ -1,13 +1,16 @@
 import dotenv from 'dotenv'
 dotenv.config()
 import express from 'express'
-
+import connectDB from './config/db.js'
 import logger from 'morgan'
 import bodyParser from 'body-parser'
 const app = express();
 const {PORT} = process.env
+connectDB()
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
+
+
 app.get('/', function (req, res) {
 	res.json({"APP": "if you see me you hit the api!"});
 });

@@ -22,7 +22,9 @@ const UserSchema = new Schema({
 
 
 UserSchema.pre('save', function (next) {
-	if (this.isNew || this.isModified('password')) {
+	if (!this.isNew || !this.isModified('password')) {
+return next()
+	}
 		bcrypt.hash(this.password, saltRounds, (error, hashedPassword) => {
 			if (error) {
 				next(error);
@@ -31,10 +33,19 @@ UserSchema.pre('save', function (next) {
 				next();
 			}
 		});
-	} else {
-		next();
-	}
-});
+	});
+
+UserSchema.methods.checkPassword = function (password) {
+	const encryptedPassword = this.password
+	return new Promise((resolve, reject) => {
+		bcrypt.compare(password, encryptedPassword, (err, verifiedPassword) => {
+			if (err) {
+				return reject(err)
+			}
+			resolve(verifiedPassword)
+		})
+	})
+}
 
 const User = mongoose.model('User', UserSchema)
 
